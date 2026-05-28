@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Tracker — Rahul Maheshwari's Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #2a2a3a;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #f59e0b;
+    --done: #10b981;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --tag-bg: #1e1e2e;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,15,0.9);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .logo span { color: var(--accent); }
+
+  .header-stats {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .stat-pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    white-space: nowrap;
+  }
+  .stat-pill b { color: var(--accent2); }
+
+  .header-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { background: #6d28d9; }
+
+  /* Progress bar */
+  .global-progress {
+    padding: 1rem 2rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .progress-track {
+    height: 4px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* Search */
+  .search-bar {
+    max-width: 1200px;
+    margin: 1.5rem auto 0;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .search-bar input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.82rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-bar input:focus { border-color: var(--accent); }
+  .search-bar input::placeholder { color: var(--muted); }
+
+  .search-icon {
+    position: absolute;
+    left: 2.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 1rem;
+    pointer-events: none;
+  }
+
+  /* Filter tabs */
+  .filter-tabs {
+    max-width: 1200px;
+    margin: 1rem auto 0;
+    padding: 0 2rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tab {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    padding: 5px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab:hover, .tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* Main content */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Topic section */
+  .topic-section {
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--card);
+    transition: border-color 0.2s;
+  }
+  .topic-section:hover { border-color: rgba(124,58,237,0.3); }
+
+  .topic-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .topic-header:hover { background: #13131d; }
+
+  .topic-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent);
+    background: rgba(124,58,237,0.1);
+    border: 1px solid rgba(124,58,237,0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .topic-title {
+    font-size: 1rem;
+    font-weight: 800;
+    flex: 1;
+    letter-spacing: -0.01em;
+  }
+
+  .topic-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .topic-count {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+  .topic-count b { color: var(--done); }
+
+  .topic-bar {
+    width: 80px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .topic-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--done));
+    border-radius: 99px;
+    transition: width 0.3s;
+  }
+
+  .chevron {
+    color: var(--muted);
+    font-size: 0.8rem;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .topic-section.collapsed .chevron { transform: rotate(-90deg); }
+
+  .topic-body { display: flex; flex-direction: column; }
+  .topic-section.collapsed .topic-body { display: none; }
+
+  /* Sub-group (like Binary Search, Misc) */
+  .subgroup-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent3);
+    padding: 0.8rem 1.5rem 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-top: 1px solid var(--border);
+  }
+  .subgroup-label:first-child { border-top: none; }
+
+  /* Problem row */
+  .problem-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 1.5rem;
+    border-top: 1px solid rgba(42,42,58,0.5);
+    transition: background 0.1s;
+    cursor: pointer;
+  }
+  .problem-row:first-of-type { border-top: none; }
+  .problem-row:hover { background: rgba(124,58,237,0.04); }
+  .problem-row.done { background: rgba(16,185,129,0.03); }
+
+  .check-box {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .problem-row.done .check-box {
+    background: var(--done);
+    border-color: var(--done);
+  }
+  .check-box::after {
+    content: '';
+    display: none;
+    width: 5px;
+    height: 9px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translate(-1px,-1px);
+  }
+  .problem-row.done .check-box::after { display: block; }
+
+  .problem-name {
+    font-size: 0.85rem;
+    flex: 1;
+    line-height: 1.4;
+    transition: color 0.1s;
+  }
+  .problem-row.done .problem-name {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: rgba(107,107,128,0.4);
+  }
+
+  .problem-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--accent2);
+    text-decoration: none;
+    background: rgba(6,182,212,0.05);
+    white-space: nowrap;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .problem-link:hover { background: rgba(6,182,212,0.15); border-color: var(--accent2); }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.25s;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.done { border-color: var(--done); color: var(--done); }
+  .toast.undone { border-color: var(--muted); color: var(--muted); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  @media (max-width: 600px) {
+    .header-stats { display: none; }
+    .topic-bar { display: none; }
+    .problem-link { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">DSA<span>Track</span></div>
+    <div class="header-stats">
+      <div class="stat-pill">Total: <b id="stat-total">0</b></div>
+      <div class="stat-pill">Done: <b id="stat-done">0</b></div>
+      <div class="stat-pill">Progress: <b id="stat-pct">0%</b></div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" onclick="resetAll()">Reset All</button>
+      <button class="btn primary" onclick="markAllDone()">Mark All Done</button>
+    </div>
+  </div>
+</header>
+
+<div class="global-progress" style="position:relative;z-index:1;">
+  <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--muted);margin-bottom:4px;">
+    <span>Overall Progress</span>
+    <span id="prog-label">0 / 0</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="global-bar" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="search-bar">
+  <span class="search-icon">⌕</span>
+  <input type="text" id="search-input" placeholder="Search problems..." oninput="filterProblems()">
+</div>
+
+<div class="filter-tabs" id="filter-tabs">
+  <button class="tab active" onclick="filterTopic('all', this)">All Topics</button>
+</div>
+
+<main id="main-content"></main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TOPICS = [
+  {
+    id: "arrays",
+    num: "01",
+    title: "Arrays",
+    color: "#7c3aed",
+    groups: [
+      {
+        label: "Binary Search",
+        problems: [
+          { name: "Find first and last position of an element", url: "https://www.geeksforgeeks.org/find-first-and-last-positions-of-an-element-in-a-sorted-array/" },
+          { name: "Find square root of an integer", url: "https://www.geeksforgeeks.org/square-root-of-an-integer/" },
+          { name: "Find Peak Element", url: "https://www.geeksforgeeks.org/find-a-peak-in-a-given-array/" },
+          { name: "Find Median of two sorted arrays", url: "https://www.geeksforgeeks.org/median-of-two-sorted-arrays/" },
+          { name: "Single element in a sorted array", url: "https://www.geeksforgeeks.org/find-the-element-that-appears-once-in-a-sorted-array/" },
+        ]
+      },
+      {
+        label: "Misc",
+        problems: [
+          { name: "Program to cyclically rotate an array by one", url: "https://www.geeksforgeeks.org/c-program-cyclically-rotate-array-one/" },
+          { name: "Maximum sum of i*arr[i] among all rotations of a given array", url: "https://www.geeksforgeeks.org/maximum-sum-iarri-among-rotations-given-array/" },
+          { name: "Rearrange an array such that arr[i] = i", url: "https://www.geeksforgeeks.org/rearrange-array-arri/" },
+          { name: "Rearrange an array in maximum minimum form | Set 1", url: "https://www.geeksforgeeks.org/rearrange-array-maximum-minimum-form/" },
+          { name: "K'th Smallest/Largest Element in Unsorted Array (Worst Case Linear Time)", url: "https://www.geeksforgeeks.org/kth-smallestlargest-element-unsorted-array-set-3-worst-case-linear-time/" },
+          { name: "Sqrt Decomposition Technique | Set 1 (Introduction)", url: "https://www.geeksforgeeks.org/sqrt-square-root-decomposition-technique-set-1-introduction/" },
+          { name: "GCDs of given index ranges in an array", url: "https://www.geeksforgeeks.org/gcds-of-given-index-ranges-in-an-array/" },
+          { name: "Maximum Occurrence in a Given Range", url: "https://www.geeksforgeeks.org/maximum-occurrence-given-range/" },
+          { name: "Largest Sum Contiguous Subarray", url: "https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/" },
+          { name: "Count minimum steps to get the given desired array", url: "https://www.geeksforgeeks.org/count-minimum-steps-to-get-the-given-desired-array/" },
+          { name: "Sort elements by frequency | Set 1", url: "https://www.geeksforgeeks.org/sort-elements-by-frequency/" },
+          { name: "Count Inversions in an array | Set 1 (Using Merge Sort)", url: "https://www.geeksforgeeks.org/counting-inversions/" },
+          { name: "Shortest Un-ordered Subarray", url: "https://www.geeksforgeeks.org/shortest-un-ordered-subarray/" },
+          { name: "Two Pointers Technique", url: "https://www.geeksforgeeks.org/two-pointers-technique/" },
+          { name: "Maximum triplet sum in array", url: "https://www.geeksforgeeks.org/find-maximum-sum-triplets-array-j-k/" },
+          { name: "Print a given matrix in spiral form", url: "https://www.geeksforgeeks.org/print-a-given-matrix-in-spiral-form/" },
+          { name: "Swap major and minor diagonals of a square matrix", url: "https://www.geeksforgeeks.org/swap-major-minor-diagonals-square-matrix/" },
+          { name: "Maximum path sum in matrix", url: "https://www.geeksforgeeks.org/maximum-path-sum-matrix/" },
+          { name: "Rearrange array in alternating positive & negative items with O(1) extra space", url: "https://www.geeksforgeeks.org/rearrange-array-alternating-positive-negative-items-o1-extra-space/" },
+          { name: "Rearrange an array in order – smallest, largest, 2nd smallest, 2nd largest", url: "https://www.geeksforgeeks.org/rearrange-array-order-smallest-largest-2nd-smallest-2nd-largest/" },
+          { name: "Kth smallest element in a row-wise and column-wise sorted 2D array | Set 1", url: "https://www.geeksforgeeks.org/kth-smallest-element-in-a-row-wise-and-column-wise-sorted-2d-array-set-1/" },
+          { name: "Find the smallest missing number", url: "https://www.geeksforgeeks.org/find-the-smallest-positive-number-missing-from-an-unsorted-array/" },
+          { name: "Minimum number of jumps to reach end", url: "https://www.geeksforgeeks.org/minimum-number-of-jumps-to-reach-end-of-a-given-array/" },
+          { name: "Maximum Sum Increasing Subsequence | DP-14", url: "https://www.geeksforgeeks.org/maximum-sum-increasing-subsequence-dp-14/" },
+          { name: "Find the smallest positive integer value that cannot be represented as sum of any subset", url: "https://www.geeksforgeeks.org/find-the-smallest-positive-integer-value-that-cannot-be-represented-as-sum-of-any-subset-of-a-given-array/" },
+          { name: "Space optimization using bit manipulations", url: "https://www.geeksforgeeks.org/space-optimization-using-bit-manipulations/" },
+          { name: "Sort an array of 0s, 1s and 2s", url: "https://www.geeksforgeeks.org/sort-an-array-of-0s-1s-and-2s/" },
+          { name: "Squares of Matrix Diagonal Elements", url: "https://www.geeksforgeeks.org/squares-of-matrix-diagonal-elements/" },
+          { name: "Subarray/Substring vs Subsequence and Programs to Generate them", url: "https://www.geeksforgeeks.org/subarraysubstring-vs-subsequence-and-programs-to-generate-them/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "linkedlist",
+    num: "02",
+    title: "Linked List",
+    color: "#06b6d4",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Reverse a Linked List", url: "https://www.geeksforgeeks.org/reverse-a-linked-list/" },
+          { name: "Reverse a LL in given group of size", url: "https://www.geeksforgeeks.org/reverse-a-list-in-groups-of-given-size/" },
+          { name: "Reverse alternate K nodes of LL", url: "https://www.geeksforgeeks.org/reverse-alternate-k-nodes-in-a-linked-list/" },
+          { name: "Print the reverse of a LL without actually reversing it", url: "https://www.geeksforgeeks.org/print-reverse-of-a-linked-list-without-actually-reversing/" },
+          { name: "Find the middle of a given LL", url: "https://www.geeksforgeeks.org/write-a-c-function-to-find-the-middle-of-the-linked-list/" },
+          { name: "Detect and remove loop in LL", url: "https://www.geeksforgeeks.org/detect-and-remove-loop-in-a-linked-list/" },
+          { name: "Find length of loop in LL", url: "https://www.geeksforgeeks.org/find-length-of-loop-in-linked-list/" },
+          { name: "Find Nth node of LL from the end", url: "https://www.geeksforgeeks.org/nth-node-from-the-end-of-a-linked-list/" },
+          { name: "Pairwise swap elements of a given LL", url: "https://www.geeksforgeeks.org/pairwise-swap-elements-of-a-given-linked-list/" },
+          { name: "Rotate a LL", url: "https://www.geeksforgeeks.org/rotate-a-linked-list/" },
+          { name: "Check if LL is palindrome or not", url: "https://www.geeksforgeeks.org/function-to-check-if-a-singly-linked-list-is-palindrome/" },
+          { name: "Find intersection point of two LLs", url: "https://www.geeksforgeeks.org/write-a-function-to-get-the-intersection-point-of-two-linked-lists/" },
+          { name: "Find Intersection of two sorted LL", url: "https://www.geeksforgeeks.org/intersection-of-two-sorted-linked-lists/" },
+          { name: "Delete alternate nodes of LL", url: "https://www.geeksforgeeks.org/delete-alternate-nodes-of-a-linked-list/" },
+          { name: "Union and intersection of two LLs", url: "https://www.geeksforgeeks.org/union-and-intersection-of-two-linked-lists/" },
+          { name: "Merge two sorted LL", url: "https://www.geeksforgeeks.org/merge-two-sorted-linked-lists/" },
+          { name: "Sum of two LL", url: "https://www.geeksforgeeks.org/sum-of-two-linked-lists/" },
+          { name: "Pairwise swap of alternate nodes of LL", url: "https://www.geeksforgeeks.org/pairwise-swap-of-alternate-nodes-of-a-linked-list-by-changing-links/" },
+          { name: "Flatten a LL", url: "https://www.geeksforgeeks.org/flattening-a-linked-list/" },
+          { name: "Copy a LL by next and arbitrary pointer", url: "https://www.geeksforgeeks.org/a-linked-list-with-next-and-arbit-pointer/" },
+          { name: "Split a Circular LL into two halves", url: "https://www.geeksforgeeks.org/split-a-circular-linked-list-into-two-halves/" },
+          { name: "Circular LL | Set 1 (Introduction and Applications)", url: "https://www.geeksforgeeks.org/circular-linked-list/" },
+          { name: "Circular LL | Set 2 (Traversal)", url: "https://www.geeksforgeeks.org/circular-linked-list-set-2-traversal/" },
+          { name: "Remove duplicates from an unsorted doubly LL", url: "https://www.geeksforgeeks.org/remove-duplicates-unsorted-doubly-linked-list/" },
+          { name: "Doubly Circular LL | Set 1 (Introduction and Insertion)", url: "https://www.geeksforgeeks.org/doubly-circular-linked-list-set-1-introduction-and-insertion/" },
+          { name: "Doubly Circular LL | Set 2 (Deletion)", url: "https://www.geeksforgeeks.org/doubly-circular-linked-list-set-2-deletion/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "recursion",
+    num: "03",
+    title: "Recursion",
+    color: "#f59e0b",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Given a string, print all possible palindromic partitions", url: "https://www.geeksforgeeks.org/given-a-string-print-all-possible-palindromic-partition/" },
+          { name: "All possible binary numbers of length n with equal sum in both halves", url: "https://www.geeksforgeeks.org/all-possible-binary-numbers-of-length-n-with-equal-sum-in-both-halves/" },
+          { name: "Power Set in Lexicographic order", url: "https://www.geeksforgeeks.org/powet-set-in-lexicographic-order/" },
+          { name: "Print all increasing sequences of length k from first n natural numbers", url: "https://www.geeksforgeeks.org/print-all-increasing-sequences-of-length-k-from-first-n-natural-numbers/" },
+          { name: "Generate all possible sorted arrays from alternate elements of two given sorted arrays", url: "https://www.geeksforgeeks.org/generate-all-possible-sorted-arrays-from-alternate-elements-of-two-given-sorted-arrays/" },
+          { name: "Print alternate nodes of a linked list using recursion", url: "https://www.geeksforgeeks.org/print-alternate-nodes-of-a-linked-list-using-recursion/" },
+          { name: "Print all longest common sub-sequences in lexicographical order", url: "https://www.geeksforgeeks.org/print-all-longest-common-sub-sequences-in-lexicographical-order/" },
+          { name: "Recursive Tower of Hanoi using 4 pegs / rods", url: "https://www.geeksforgeeks.org/recursive-tower-of-hanoi-using-4-pegs-rods/" },
+          { name: "Program for Sum of the digits of a given number", url: "https://www.geeksforgeeks.org/program-for-sum-of-the-digits-of-a-given-number/" },
+          { name: "Print all combinations of factors (Ways to factorize)", url: "https://www.geeksforgeeks.org/print-all-combinations-of-factors-ways-to-factorize/" },
+          { name: "N Queen in O(n) space", url: "https://www.geeksforgeeks.org/n-queen-in-on-space/" },
+          { name: "Check if a destination is reachable from source with two movements allowed", url: "https://www.geeksforgeeks.org/check-if-a-destination-is-reachable-from-source-with-two-movements-allowed/" },
+          { name: "Minimum steps to reach a destination", url: "https://www.geeksforgeeks.org/minimum-steps-to-reach-a-destination/" },
+          { name: "Mutual Recursion with example of Hofstadter Female and Male sequences", url: "https://www.geeksforgeeks.org/mutual-recursion-example-hofstadter-female-male-sequences/" },
+          { name: "Find ways an Integer can be expressed as sum of n-th power of unique natural numbers", url: "https://www.geeksforgeeks.org/find-ways-integer-expressed-sum-n-th-power-unique-natural-numbers/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "backtracking",
+    num: "04",
+    title: "Backtracking",
+    color: "#ec4899",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Subset Sum | Backtracking-4", url: "https://www.geeksforgeeks.org/subset-sum-backtracking-4/" },
+          { name: "Rat in a Maze | Backtracking-2", url: "https://www.geeksforgeeks.org/rat-in-a-maze-backtracking-2/" },
+          { name: "m Coloring Problem | Backtracking-5", url: "https://www.geeksforgeeks.org/m-coloring-problem-backtracking-5/" },
+          { name: "N Queen in O(n) space", url: "https://www.geeksforgeeks.org/n-queen-in-on-space/" },
+          { name: "Remove Invalid Parentheses", url: "https://www.geeksforgeeks.org/remove-invalid-parentheses/" },
+          { name: "Print all permutations of a given string", url: "https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/" },
+          { name: "Combinational Sum", url: "https://www.geeksforgeeks.org/combinational-sum/" },
+          { name: "Power Set in Lexicographic order", url: "https://www.geeksforgeeks.org/powet-set-in-lexicographic-order/" },
+          { name: "Word Break Problem using Backtracking", url: "https://www.geeksforgeeks.org/word-break-problem-using-backtracking/" },
+          { name: "Print all palindromic partitions of a string", url: "https://www.geeksforgeeks.org/given-a-string-print-all-possible-palindromic-partition/" },
+          { name: "Tug of War", url: "https://www.geeksforgeeks.org/tug-of-war/" },
+          { name: "Warnsdorff's algorithm for Knight's tour problem", url: "https://www.geeksforgeeks.org/warnsdorffs-algorithm-knights-tour-problem/" },
+          { name: "Find paths from corner cell to middle cell in maze", url: "https://www.geeksforgeeks.org/find-paths-given-source-destination/" },
+          { name: "Match a pattern and String without using regular expressions", url: "https://www.geeksforgeeks.org/match-a-pattern-and-string-without-using-regular-expressions/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "tree",
+    num: "05",
+    title: "Trees",
+    color: "#10b981",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Evaluation of Expression Tree", url: "https://www.geeksforgeeks.org/expression-tree/" },
+          { name: "Find the Maximum Depth or Height of a Tree", url: "https://www.geeksforgeeks.org/write-a-c-program-to-find-the-maximum-depth-or-height-of-a-tree/" },
+          { name: "Print Postorder traversal from given Inorder and Preorder traversals", url: "https://www.geeksforgeeks.org/print-postorder-from-given-inorder-and-preorder-traversals/" },
+          { name: "Level order traversal with direction change after every two levels", url: "https://www.geeksforgeeks.org/level-order-traversal-with-direction-change-after-every-two-levels/" },
+          { name: "Iterative Postorder Traversal | Set 2 (Using One Stack)", url: "https://www.geeksforgeeks.org/iterative-postorder-traversal-using-stack/" },
+          { name: "Convert a given Binary Tree to Doubly Linked List | Set 4", url: "https://www.geeksforgeeks.org/convert-a-given-binary-tree-to-doubly-linked-list/" },
+          { name: "Minimum swap required to convert binary tree to binary search tree", url: "https://www.geeksforgeeks.org/minimum-swap-required-convert-binary-tree-binary-search-tree/" },
+          { name: "Check whether a given Binary Tree is Complete or not | Set 1", url: "https://www.geeksforgeeks.org/check-if-a-given-binary-tree-is-complete-tree-or-not/" },
+          { name: "Check if a Binary Tree contains duplicate subtrees of size 2 or more", url: "https://www.geeksforgeeks.org/check-binary-tree-contains-duplicate-subtrees-size-2/" },
+          { name: "Check if a binary tree is subtree of another binary tree | Set 2", url: "https://www.geeksforgeeks.org/check-binary-tree-subtree-another-binary-tree-set-2/" },
+          { name: "Maximum sum of nodes in Binary tree such that no two are adjacent", url: "https://www.geeksforgeeks.org/maximum-sum-nodes-binary-tree-no-two-adjacent/" },
+          { name: "Vertical Sum in a given Binary Tree | Set 1", url: "https://www.geeksforgeeks.org/vertical-sum-in-a-given-binary-tree/" },
+          { name: "Lowest Common Ancestor in a Binary Tree | Set 3 (Using RMQ)", url: "https://www.geeksforgeeks.org/find-lca-in-binary-tree-using-rmq/" },
+          { name: "Tree Isomorphism Problem", url: "https://www.geeksforgeeks.org/tree-isomorphism-problem/" },
+          { name: "Diameter of a Binary Tree in O(n)", url: "https://www.geeksforgeeks.org/diameter-of-a-binary-tree-in-on-a-new-method/" },
+          { name: "Find All Duplicate Subtrees", url: "https://www.geeksforgeeks.org/find-duplicate-subtrees/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "bst",
+    num: "06",
+    title: "Binary Search Tree",
+    color: "#f97316",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Binary Search Tree | Set 1 (Search and Insertion)", url: "https://www.geeksforgeeks.org/binary-search-tree-set-1-search-and-insertion/" },
+          { name: "Binary Search Tree | Set 2 (Delete)", url: "https://www.geeksforgeeks.org/binary-search-tree-set-2-delete/" },
+          { name: "Convert BST to Min Heap", url: "https://www.geeksforgeeks.org/convert-bst-min-heap/" },
+          { name: "Check if array can represent Level Order Traversal of BST", url: "https://www.geeksforgeeks.org/check-if-the-given-array-can-represent-the-level-order-traversal-of-a-binary-search-tree/" },
+          { name: "C Program for Red Black Tree Insertion", url: "https://www.geeksforgeeks.org/c-program-red-black-tree-insertion/" },
+          { name: "Convert a Binary Tree to Threaded binary tree | Set 2 (Efficient)", url: "https://www.geeksforgeeks.org/convert-binary-tree-threaded-binary-tree-set-2-efficient/" },
+          { name: "Sorted order printing of a given array that represents a BST", url: "https://www.geeksforgeeks.org/sorted-order-printing-of-an-array-that-represents-a-bst/" },
+          { name: "Data Structure for a single resource reservations", url: "https://www.geeksforgeeks.org/data-structure-for-a-single-resource-reservations/" },
+          { name: "Count inversions in an array | Set 2 (Using Self-Balancing BST)", url: "https://www.geeksforgeeks.org/count-inversions-in-an-array-set-2-using-self-balancing-bst/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "graph",
+    num: "07",
+    title: "Graph",
+    color: "#8b5cf6",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Breadth First Search or BFS for a Graph", url: "https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/" },
+          { name: "Depth First Search or DFS for a Graph", url: "https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/" },
+          { name: "Applications of Depth First Search", url: "https://www.geeksforgeeks.org/applications-of-depth-first-search/" },
+          { name: "Applications of Breadth First Traversal", url: "https://www.geeksforgeeks.org/applications-of-breadth-first-traversal/" },
+          { name: "Iterative Depth First Traversal of Graph", url: "https://www.geeksforgeeks.org/iterative-depth-first-traversal/" },
+          { name: "BFS using STL for competitive coding", url: "https://www.geeksforgeeks.org/bfs-using-stl-competitive-coding/" },
+          { name: "Detect Cycle in a Directed Graph", url: "https://www.geeksforgeeks.org/detect-cycle-in-a-graph/" },
+          { name: "Disjoint Set (Or Union-Find) | Set 1 (Detect Cycle in an Undirected Graph)", url: "https://www.geeksforgeeks.org/union-find/" },
+          { name: "Longest Path in a Directed Acyclic Graph | Set 2", url: "https://www.geeksforgeeks.org/longest-path-in-a-directed-acyclic-graph-set-2/" },
+          { name: "N Queen Problem | Backtracking-3", url: "https://www.geeksforgeeks.org/n-queen-problem-backtracking-3/" },
+          { name: "The Knight's tour problem | Backtracking-1", url: "https://www.geeksforgeeks.org/the-knights-tour-problem-backtracking-1/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "strings",
+    num: "08",
+    title: "Strings",
+    color: "#06b6d4",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Find Minimum and Maximum distinct persons entering or leaving the room", url: "https://www.geeksforgeeks.org/find-minimum-maximum-distinct-persons-entering-leaving-room/" },
+          { name: "Minimum partitions of String such that each part is at most K", url: "https://www.geeksforgeeks.org/minimum-partitions-of-string-such-that-each-part-is-at-most-k/" },
+          { name: "Smallest window containing 0, 1 and 2", url: "https://www.geeksforgeeks.org/smallest-window-containing-0-1-and-2/" },
+          { name: "Find the Substring with maximum frequency containing only X and Y", url: "https://www.geeksforgeeks.org/find-the-substring-with-maximum-frequency-and-containing-only-x-and-y/" },
+          { name: "Remove longest prefix of the String which has duplicate substring", url: "https://www.geeksforgeeks.org/remove-longest-prefix-of-the-string-which-has-duplicate-substring/" },
+          { name: "Print all interleavings of given two strings", url: "https://www.geeksforgeeks.org/print-all-interleavings-of-given-two-strings/" },
+          { name: "Isomorphic Strings", url: "https://practice.geeksforgeeks.org/problems/isomorphic-strings-1587115620/1" },
+          { name: "Validate an IP Address", url: "https://practice.geeksforgeeks.org/problems/validate-an-ip-address-1587115621/1" },
+          { name: "Form a palindrome", url: "https://practice.geeksforgeeks.org/problems/form-a-palindrome1455/1" },
+          { name: "Find largest word in dictionary", url: "https://practice.geeksforgeeks.org/problems/find-largest-word-in-dictionary2430/1" },
+          { name: "Interleaved Strings", url: "https://practice.geeksforgeeks.org/problems/interleaved-strings/1" },
+          { name: "Print Anagrams Together", url: "https://practice.geeksforgeeks.org/problems/print-anagrams-together/1" },
+          { name: "Search Pattern (KMP-Algorithm)", url: "https://practice.geeksforgeeks.org/problems/search-pattern0205/1" },
+          { name: "Distinct palindromic substrings", url: "https://practice.geeksforgeeks.org/problems/distinct-palindromic-substrings0745/1" },
+          { name: "Minimum number of stops from given path", url: "https://www.geeksforgeeks.org/minimum-number-of-stops-from-given-path/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "hashing",
+    num: "09",
+    title: "Hashing",
+    color: "#ef4444",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Find whether an array is subset of another array", url: "https://www.geeksforgeeks.org/find-whether-an-array-is-subset-of-another-array-set-1/" },
+          { name: "Count maximum points on same line", url: "https://www.geeksforgeeks.org/count-maximum-points-on-same-line/" },
+          { name: "Pair with given product | Set 1 (Find if any pair exists)", url: "https://www.geeksforgeeks.org/pair-with-given-product-set-1-find-if-any-pair-exists/" },
+          { name: "Count pairs from two sorted arrays whose sum is equal to a given value x", url: "https://www.geeksforgeeks.org/count-pairs-two-sorted-arrays-whose-sum-equal-given-value-x/" },
+          { name: "Find number of Employees Under every Manager", url: "https://www.geeksforgeeks.org/find-number-of-employees-under-every-manager/" },
+          { name: "Longest subarray with sum divisible by k", url: "https://www.geeksforgeeks.org/longest-subarray-sum-divisible-k/" },
+          { name: "Find the length of largest subarray with 0 sum", url: "https://www.geeksforgeeks.org/find-the-largest-subarray-with-0-sum/" },
+          { name: "Longest Increasing consecutive subsequence", url: "https://www.geeksforgeeks.org/longest-increasing-consecutive-subsequence/" },
+          { name: "Find subarray with given sum | Set 2 (Handles Negative Numbers)", url: "https://www.geeksforgeeks.org/find-subarray-with-given-sum-in-array-of-integers/" },
+          { name: "Clone a Binary Tree with Random Pointers", url: "https://www.geeksforgeeks.org/clone-binary-tree-random-pointers/" },
+          { name: "Largest subarray with equal number of 0s and 1s", url: "https://www.geeksforgeeks.org/largest-subarray-with-equal-number-of-0s-and-1s/" },
+          { name: "Palindrome Substring Queries", url: "https://www.geeksforgeeks.org/palindrome-substring-queries/" },
+          { name: "Cuckoo Hashing - Worst case O(1) Lookup!", url: "https://www.geeksforgeeks.org/cuckoo-hashing/" },
+          { name: "Game of replacing array elements", url: "https://www.geeksforgeeks.org/game-of-replacing-array-elements/" },
+          { name: "Recaman's sequence", url: "https://www.geeksforgeeks.org/recamans-sequence/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "dp1",
+    num: "10",
+    title: "Dynamic Programming — Set 1",
+    color: "#a855f7",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Program for Fibonacci numbers", url: "https://www.geeksforgeeks.org/program-for-nth-fibonacci-number/" },
+          { name: "Count all subsequences having product less than K", url: "https://www.geeksforgeeks.org/count-subsequences-product-less-k/" },
+          { name: "Find number of solutions of a linear equation of n variables", url: "https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/" },
+          { name: "Binomial Coefficient | DP-9", url: "https://www.geeksforgeeks.org/dynamic-programming-set-9-binomial-coefficient/" },
+          { name: "Coin Change | DP-7", url: "https://www.geeksforgeeks.org/coin-change-dp-7/" },
+          { name: "Printing Items in 0/1 Knapsack", url: "https://www.geeksforgeeks.org/printing-items-01-knapsack/" },
+          { name: "Ugly Numbers", url: "https://www.geeksforgeeks.org/ugly-numbers/" },
+          { name: "Super Ugly Number (Number whose prime factors are in given set)", url: "https://www.geeksforgeeks.org/super-ugly-number-number-whose-prime-factors-given-set/" },
+          { name: "Program for nth Catalan Number", url: "https://www.geeksforgeeks.org/program-nth-catalan-number/" },
+          { name: "Gold Mine Problem", url: "https://www.geeksforgeeks.org/gold-mine-problem/" },
+          { name: "Cutting a Rod | DP-13", url: "https://www.geeksforgeeks.org/cutting-a-rod-dp-13/" },
+          { name: "Moser-de Bruijn Sequence", url: "https://www.geeksforgeeks.org/moser-de-bruijn-sequence/" },
+          { name: "Longest Common Subsequence | DP-4", url: "https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/" },
+          { name: "Eulerian Number", url: "https://www.geeksforgeeks.org/eulerian-number/" },
+          { name: "Floyd Warshall Algorithm | DP-16", url: "https://www.geeksforgeeks.org/floyd-warshall-algorithm-dp-16/" },
+          { name: "Temple Offerings", url: "https://www.geeksforgeeks.org/temple-offerings/" },
+          { name: "Egg Dropping Puzzle | DP-11", url: "https://www.geeksforgeeks.org/egg-dropping-puzzle-dp-11/" },
+          { name: "Dice Throw | DP-30", url: "https://www.geeksforgeeks.org/dice-throw-dp-30/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "dp2",
+    num: "11",
+    title: "Dynamic Programming — Set 2",
+    color: "#ec4899",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Word Break Problem | DP-32", url: "https://www.geeksforgeeks.org/word-break-problem-dp-32/" },
+          { name: "Tile Stacking Problem", url: "https://www.geeksforgeeks.org/tiling-problem/" },
+          { name: "Print equal sum sets of array (Partition Problem) | Set 2", url: "https://www.geeksforgeeks.org/print-equal-sum-sets-array-partition-problem-set-2/" },
+          { name: "Travelling Salesman Problem | Set 1 (Naive and Dynamic Programming)", url: "https://www.geeksforgeeks.org/travelling-salesman-problem-set-1/" },
+          { name: "Longest Bitonic Subsequence | DP-15", url: "https://www.geeksforgeeks.org/longest-bitonic-subsequence-dp-15/" },
+          { name: "Weighted Job Scheduling | Set 2 (Using LIS)", url: "https://www.geeksforgeeks.org/weighted-job-scheduling-log-n-time/" },
+          { name: "Number of paths with exactly k coins", url: "https://www.geeksforgeeks.org/number-of-paths-with-exactly-k-coins/" },
+          { name: "Maximum and Minimum Values of an Algebraic Expression", url: "https://www.geeksforgeeks.org/maximum-minimum-values-algebraic-expression/" },
+          { name: "Paper Cut into Minimum Number of Squares | Set 2", url: "https://www.geeksforgeeks.org/paper-cut-minimum-number-squares-set-2/" },
+          { name: "Find if string is K-Palindrome or not | Set 2", url: "https://www.geeksforgeeks.org/find-if-string-is-k-palindrome-or-not-set-2/" },
+          { name: "Check for possible path in 2D matrix", url: "https://www.geeksforgeeks.org/check-possible-path-2d-matrix/" },
+          { name: "Balanced expressions such that given positions have opening brackets", url: "https://www.geeksforgeeks.org/balanced-expressions-given-positions-opening-brackets/" },
+          { name: "Longest alternating sub-array starting from every index in a Binary Array", url: "https://www.geeksforgeeks.org/longest-alternating-sub-array-starting-every-index-binary-array/" },
+          { name: "Word Wrap Problem | DP-19", url: "https://www.geeksforgeeks.org/word-wrap-problem-dp-19/" },
+          { name: "Mobile Numeric Keypad Problem", url: "https://www.geeksforgeeks.org/mobile-numeric-keypad-problem/" },
+          { name: "The Painter's partition problem", url: "https://www.geeksforgeeks.org/painters-partition-problem/" },
+          { name: "Matrix Chain Multiplication | DP-8", url: "https://www.geeksforgeeks.org/matrix-chain-multiplication-dp-8/" },
+          { name: "Longest Geometric Progression", url: "https://www.geeksforgeeks.org/longest-geometric-progression/" },
+          { name: "Dynamic Programming on Trees | Set 2", url: "https://www.geeksforgeeks.org/dynamic-programming-trees-set-2/" },
+          { name: "Find all combinations of k-bit numbers with n bits set in sorted order", url: "https://www.geeksforgeeks.org/find-all-combinations-of-k-bit-numbers-with-n-bits-set-where-1-n-k-in-sorted-order/" },
+          { name: "Boolean Parenthesization Problem | DP-37", url: "https://www.geeksforgeeks.org/boolean-parenthesization-problem-dp-37/" },
+          { name: "Edit Distance | DP-5", url: "https://www.geeksforgeeks.org/edit-distance-dp-5/" },
+        ]
+      }
+    ]
+  },
+  {
+    id: "favorites",
+    num: "12",
+    title: "PBC Favorites",
+    color: "#f59e0b",
+    groups: [
+      {
+        label: "Problems",
+        problems: [
+          { name: "Serialize and Deserialize a Binary Tree", url: "https://www.geeksforgeeks.org/serialize-deserialize-binary-tree/" },
+          { name: "Kth smallest element in a row-wise and column-wise sorted 2D array | Set 1", url: "https://www.geeksforgeeks.org/kth-smallest-element-in-a-row-wise-and-column-wise-sorted-2d-array-set-1/" },
+          { name: "Detect Cycle in a directed graph using colors", url: "https://www.geeksforgeeks.org/detect-cycle-direct-graph-using-colors/" },
+          { name: "Flattening a Linked List", url: "https://www.geeksforgeeks.org/flattening-a-linked-list/" },
+          { name: "LRU Cache Implementation", url: "https://www.geeksforgeeks.org/lru-cache-implementation/" },
+          { name: "Arrange given numbers to form the biggest number | Set 1", url: "https://www.geeksforgeeks.org/given-an-array-of-numbers-arrange-the-numbers-to-form-the-biggest-number/" },
+          { name: "Find if array can be divided into two subarrays of equal sum", url: "https://www.geeksforgeeks.org/find-if-array-can-be-divided-into-two-subarrays-of-equal-sum/" },
+          { name: "Diameter of a Binary Tree", url: "https://www.geeksforgeeks.org/diameter-of-a-binary-tree/" },
+          { name: "Count number of ways to cover a distance", url: "https://www.geeksforgeeks.org/count-number-of-ways-to-cover-a-distance/" },
+          { name: "Box Stacking Problem | DP-22", url: "https://www.geeksforgeeks.org/box-stacking-problem-dp-22/" },
+          { name: "Cutting a Rod | DP-13", url: "https://www.geeksforgeeks.org/cutting-a-rod-dp-13/" },
+          { name: "Longest Common Subsequence | DP-4", url: "https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/" },
+          { name: "Rat in a Maze | Backtracking-2", url: "https://www.geeksforgeeks.org/rat-in-a-maze-backtracking-2/" },
+          { name: "Sudoku | Backtracking-7", url: "https://www.geeksforgeeks.org/sudoku-backtracking-7/" },
+          { name: "Chocolate Distribution Problem", url: "https://practice.geeksforgeeks.org/problems/chocolate-distribution-problem3825/1" },
+          { name: "Kadane's Algorithm", url: "https://practice.geeksforgeeks.org/problems/kadanes-algorithm-1587115620/1" },
+          { name: "Implement Atoi", url: "https://practice.geeksforgeeks.org/problems/implement-atoi/1" },
+          { name: "Roman Number to Integer", url: "https://practice.geeksforgeeks.org/problems/roman-number-to-integer3201/1" },
+          { name: "Implement strstr", url: "https://practice.geeksforgeeks.org/problems/implement-strstr/1" },
+          { name: "Detect Loop in linked list", url: "https://practice.geeksforgeeks.org/problems/detect-loop-in-linked-list/1" },
+          { name: "Given a linked list of 0s, 1s and 2s, sort it", url: "https://practice.geeksforgeeks.org/problems/given-a-linked-list-of-0s-1s-and-2s-sort-it/1" },
+          { name: "Circular tour", url: "https://practice.geeksforgeeks.org/problems/circular-tour/1" },
+          { name: "Rotten Oranges", url: "https://practice.geeksforgeeks.org/problems/rotten-oranges2536/1" },
+          { name: "Check for BST", url: "https://practice.geeksforgeeks.org/problems/check-for-bst/1" },
+          { name: "Binary Heap Operations", url: "https://practice.geeksforgeeks.org/problems/operations-on-binary-min-heap/1" },
+          { name: "Flood fill Algorithm", url: "https://practice.geeksforgeeks.org/problems/flood-fill-algorithm1856/1" },
+          { name: "Josephus problem", url: "https://practice.geeksforgeeks.org/problems/josephus-problem/1" },
+          { name: "Number of paths", url: "https://practice.geeksforgeeks.org/problems/number-of-paths0926/1" },
+          { name: "Sort an array according to the other", url: "https://practice.geeksforgeeks.org/problems/relative-sorting/1" },
+          { name: "Array Pair Sum Divisibility Problem", url: "https://practice.geeksforgeeks.org/problems/array-pair-sum-divisibility-problem3257/1" },
+          { name: "Smallest window in a string containing all characters of another string", url: "https://practice.geeksforgeeks.org/problems/smallest-window-in-a-string-containing-all-the-characters-of-another-string-1587115621/1" },
+          { name: "Detect cycle in an undirected graph", url: "https://practice.geeksforgeeks.org/problems/detect-cycle-in-an-undirected-graph/1" },
+          { name: "Alien Dictionary", url: "https://practice.geeksforgeeks.org/problems/alien-dictionary/1" },
+          { name: "Snake and Ladder Problem", url: "https://practice.geeksforgeeks.org/problems/snake-and-ladder-problem4816/1" },
+          { name: "Minimum Cost Path", url: "https://practice.geeksforgeeks.org/problems/minimum-cost-path3833/1" },
+          { name: "Activity Selection", url: "https://practice.geeksforgeeks.org/problems/activity-selection-1587115620/1" },
+          { name: "N meetings in one room", url: "https://practice.geeksforgeeks.org/problems/n-meetings-in-one-room-1587115620/1" },
+          { name: "Shop in Candy Store", url: "https://practice.geeksforgeeks.org/problems/shop-in-candy-store1145/1" },
+          { name: "Minimum Operations", url: "https://practice.geeksforgeeks.org/problems/find-optimum-operation/1" },
+          { name: "Optimal Strategy For A Game", url: "https://practice.geeksforgeeks.org/problems/optimal-strategy-for-a-game-1587115620/1" },
+          { name: "Word Boggle", url: "https://practice.geeksforgeeks.org/problems/word-boggle4143/1" },
+          { name: "Number is sparse or not", url: "https://practice.geeksforgeeks.org/problems/number-is-sparse-or-not/1" },
+          { name: "Bit Difference", url: "https://practice.geeksforgeeks.org/problems/bit-difference/1" },
+          { name: "Party of Couples", url: "https://practice.geeksforgeeks.org/problems/alone-in-couple5507/1" },
+          { name: "Rightmost different bit", url: "https://practice.geeksforgeeks.org/problems/rightmost-different-bit2633/1" },
+          { name: "Consecutive 1's not allowed", url: "https://practice.geeksforgeeks.org/problems/consecutive-1s-not-allowed1706/1" },
+          { name: "Jumping Caterpillars", url: "https://practice.geeksforgeeks.org/problems/jumping-caterpillars/1" },
+          { name: "Save Ironman", url: "https://practice.geeksforgeeks.org/problems/save-ironman/1" },
+          { name: "String Ignorance", url: "https://practice.geeksforgeeks.org/problems/string-ignorance/1" },
+          { name: "Mirror Tree", url: "https://practice.geeksforgeeks.org/problems/mirror-tree/1" },
+          { name: "Binary Tree to DLL", url: "https://practice.geeksforgeeks.org/problems/binary-tree-to-dll/1" },
+          { name: "Lowest Common Ancestor in a Binary Tree", url: "https://practice.geeksforgeeks.org/problems/lowest-common-ancestor-in-a-binary-tree/1" },
+          { name: "Longest consecutive sequence in Binary tree", url: "https://practice.geeksforgeeks.org/problems/longest-consecutive-sequence-in-binary-tree/1" },
+          { name: "2-sum and 3-sum", url: "https://www.geeksforgeeks.org/two-sum-problem/" },
+          { name: "Tree of Space", url: "https://www.geeksforgeeks.org/trees-in-data-structure/" },
+        ]
+      }
+    ]
+  }
+];
+
+// State
+let done = {};
+let searchTerm = '';
+let topicFilter = 'all';
+
+function loadState() {
+  try { done = JSON.parse(localStorage.getItem('dsa_done') || '{}'); } catch(e) { done = {}; }
+}
+function saveState() {
+  localStorage.setItem('dsa_done', JSON.stringify(done));
+}
+
+function getProblemId(topicId, groupIdx, probIdx) {
+  return `${topicId}_${groupIdx}_${probIdx}`;
+}
+
+function toggleDone(id, e) {
+  e && e.stopPropagation();
+  done[id] = !done[id];
+  saveState();
+  render();
+  showToast(done[id]);
+}
+
+function showToast(isDone) {
+  const t = document.getElementById('toast');
+  t.textContent = isDone ? '✓ Marked as done!' : '○ Marked as pending';
+  t.className = 'toast ' + (isDone ? 'done' : 'undone');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.className = 'toast', 1800);
+}
+
+function getAllIds() {
+  const ids = [];
+  TOPICS.forEach(topic => {
+    topic.groups.forEach((grp, gi) => {
+      grp.problems.forEach((_, pi) => ids.push(getProblemId(topic.id, gi, pi)));
+    });
+  });
+  return ids;
+}
+
+function resetAll() {
+  if (!confirm('Reset all progress? This cannot be undone.')) return;
+  done = {};
+  saveState();
+  render();
+}
+
+function markAllDone() {
+  getAllIds().forEach(id => done[id] = true);
+  saveState();
+  render();
+}
+
+function filterProblems() {
+  searchTerm = document.getElementById('search-input').value.toLowerCase();
+  render();
+}
+
+function filterTopic(id, el) {
+  topicFilter = id;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function toggleSection(id) {
+  const sec = document.getElementById('sec-' + id);
+  if (sec) sec.classList.toggle('collapsed');
+}
+
+function countTopic(topic) {
+  let total = 0, doneCount = 0;
+  topic.groups.forEach((grp, gi) => {
+    grp.problems.forEach((_, pi) => {
+      total++;
+      if (done[getProblemId(topic.id, gi, pi)]) doneCount++;
+    });
+  });
+  return { total, doneCount };
+}
+
+function render() {
+  const allIds = getAllIds();
+  const totalDone = allIds.filter(id => done[id]).length;
+  const total = allIds.length;
+  const pct = total ? Math.round(totalDone / total * 100) : 0;
+
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-done').textContent = totalDone;
+  document.getElementById('stat-pct').textContent = pct + '%';
+  document.getElementById('global-bar').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = `${totalDone} / ${total}`;
+
+  const main = document.getElementById('main-content');
+  let html = '';
+  let anyVisible = false;
+
+  TOPICS.forEach(topic => {
+    if (topicFilter !== 'all' && topicFilter !== topic.id) return;
+
+    const { total: tTotal, doneCount: tDone } = countTopic(topic);
+    const tPct = tTotal ? Math.round(tDone / tTotal * 100) : 0;
+
+    // Filter problems
+    let hasMatch = false;
+    const groupsHtml = topic.groups.map((grp, gi) => {
+      const probsHtml = grp.problems.map((prob, pi) => {
+        if (searchTerm && !prob.name.toLowerCase().includes(searchTerm)) return '';
+        hasMatch = true;
+        const id = getProblemId(topic.id, gi, pi);
+        const isDone = !!done[id];
+        return `<div class="problem-row${isDone ? ' done' : ''}" onclick="toggleDone('${id}', event)">
+          <div class="check-box" onclick="toggleDone('${id}', event)"></div>
+          <span class="problem-name">${prob.name}</span>
+          <a class="problem-link" href="${prob.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Solve →</a>
+        </div>`;
+      }).join('');
+
+      if (!probsHtml) return '';
+      return `<div class="subgroup-label">${grp.label}</div>${probsHtml}`;
+    }).join('');
+
+    if (searchTerm && !hasMatch) return;
+    anyVisible = true;
+
+    html += `<div class="topic-section" id="sec-${topic.id}">
+      <div class="topic-header" onclick="toggleSection('${topic.id}')">
+        <span class="topic-num">${topic.num}</span>
+        <span class="topic-title">${topic.title}</span>
+        <div class="topic-meta">
+          <span class="topic-count"><b>${tDone}</b> / ${tTotal}</span>
+          <div class="topic-bar"><div class="topic-bar-fill" style="width:${tPct}%"></div></div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="topic-body">${groupsHtml}</div>
+    </div>`;
+  });
+
+  if (!anyVisible) {
+    html = `<div class="empty-state">No problems found for "${searchTerm}"</div>`;
+  }
+
+  main.innerHTML = html;
+}
+
+function buildTabs() {
+  const tabs = document.getElementById('filter-tabs');
+  TOPICS.forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'tab';
+    btn.textContent = t.title;
+    btn.onclick = function() { filterTopic(t.id, this); };
+    tabs.appendChild(btn);
+  });
+}
+
+// Init
+loadState();
+buildTabs();
+render();
+</script>
+</body>
+</html>
